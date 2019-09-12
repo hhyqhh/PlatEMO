@@ -1,14 +1,14 @@
 <img src="./Doc/logo.png" width=256 height=256 />  
 
 # PlatEMO
-[![](https://img.shields.io/badge/Version-Latest-yellow.svg)](https://github.com/BIMK/PlatEMO/archive/master.zip) 
+[![](https://img.shields.io/badge/Download-Latest-yellow.svg)](https://github.com/BIMK/PlatEMO/archive/master.zip) 
 [![](https://img.shields.io/github/release/BIMK/PlatEMO.svg)](https://github.com/BIMK/PlatEMO/releases/)
 [![](https://img.shields.io/badge/Matlab-%3E%3D%202014a%20-blue.svg)](#PlatEMO)  
 [![](https://img.shields.io/badge/Windows-Pass-brightgreen.svg)](#PlatEMO)
-[![](https://img.shields.io/badge/Linux-Validating-red.svg)](#PlatEMO)
-[![](https://img.shields.io/badge/MacOS-Validating-lightred.svg)](#PlatEMO)  
+[![](https://img.shields.io/badge/Linux-Pass-brightgreen.svg)](#PlatEMO)
+[![](https://img.shields.io/badge/MacOS-Validating-red.svg)](#PlatEMO)  
 Evolutionary multi-objective optimization platform
-* 90+ open source evolutionary algorithms
+* 100+ open source evolutionary algorithms
 * 120+ open source multi-objective test problems
 * Powerful GUI for performing experiments in parallel
 * Generating results in the format of Excel or LaTeX table by one-click operation
@@ -36,10 +36,12 @@ following literature:
   year={2017},
 }
 ```  
-# Release Highlights of PlatEMO 2.0
-* __Lighter framework.__ The architecture of PlatEMO is simplified, which leads to lower learning cost and higher efficiency. The result file size is also reduced.  
-* __Higher efficiency.__ The runtime of Pareto dominance based algorithms is reduced by using a more efficient non-dominated sorting algorithm. The runtime of decomposition based algorithms is reduced due to the new architecture of PlatEMO. The runtime of hypervolume calculation is reduced by new logic and GPU acceleration. In experimental module, the algorithms can be executed in parallel.  
-* __More conveniences.__ The populations obtained during the evolutionary process can be saved in result files. The references of each algorithm, problem, operator, and metric are given in the comments of the function. The codes of GUI are now open source.
+# Release Highlights of PlatEMO 2.2  
+[Release Note can be found here](./Doc/releasenote.md)
+
+* Add two algorithms AGE-MOEA and PPS.
+* Add the constrained benchmark problems DAS-CMOP1-9 and LIR-CMOP1-14.
+
 
 # Features of PlatEMO
 *  Totally Developed in MATLAB  

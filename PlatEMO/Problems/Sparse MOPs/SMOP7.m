@@ -1,8 +1,12 @@
-classdef SMOP1 < PROBLEM
-% <problem> <SMOP>
+classdef SMOP7 < PROBLEM
+% <problem> <Sparse MOP>
 % Benchmark MOP with sparse Pareto optimal solutions
 % theta --- 0.1 --- Sparsity of the Pareto set
 
+%------------------------------- Reference --------------------------------
+% Y. Tian, X. Zhang, C. Wang, and Y. Jin, An evolutionary algorithm for
+% large-scale sparse multi-objective optimization problems, IEEE
+% Transactions on Evolutionary Computation, 2019.
 %------------------------------- Copyright --------------------------------
 % Copyright (c) 2018-2019 BIMK Group. You are free to use the PlatEMO for
 % research purposes. All publications which use this platform or any code
@@ -17,7 +21,7 @@ classdef SMOP1 < PROBLEM
     end
     methods
         %% Initialization
-        function obj = SMOP1()
+        function obj = SMOP7()
             obj.theta = obj.Global.ParameterSet(0.1);
             if isempty(obj.Global.M)
                 obj.Global.M = 2;
@@ -34,18 +38,15 @@ classdef SMOP1 < PROBLEM
             [N,D] = size(X);
             M = obj.Global.M;
             K = ceil(obj.theta*(D-M+1));
-            g = sum(g1(X(:,M:M+K-1),pi/3),2) + sum(g2(X(:,M+K:end),0),2);
-            PopObj = repmat(1+g/(D-M+1),1,M).*fliplr(cumprod([ones(N,1),X(:,1:M-1)],2)).*[ones(N,1),1-X(:,M-1:-1:1)];
+            g = sum(g2(X(:,M:M+K-1),pi/3),2) + sum(g2(X(:,M+K:end),X(:,[M+K+1:end,M+K])*0.9),2);
+            PopObj = repmat(1+g/(D-M+1),1,M).*fliplr(cumprod([ones(N,1),cos(X(:,1:M-1)*pi/2)],2)).*[ones(N,1),sin(X(:,M-1:-1:1)*pi/2)];
         end
         %% Sample reference points on Pareto front
         function P = PF(obj,N)
             P = UniformPoint(N,obj.Global.M);
+            P = P./repmat(sqrt(sum(P.^2,2)),1,obj.Global.M);
         end
     end
-end
-
-function g = g1(x,t)
-    g = (x-t).^2;
 end
 
 function g = g2(x,t)

@@ -1,8 +1,12 @@
-classdef SMOP6 < PROBLEM
-% <problem> <SMOP>
+classdef SMOP8 < PROBLEM
+% <problem> <Sparse MOP>
 % Benchmark MOP with sparse Pareto optimal solutions
 % theta --- 0.1 --- Sparsity of the Pareto set
 
+%------------------------------- Reference --------------------------------
+% Y. Tian, X. Zhang, C. Wang, and Y. Jin, An evolutionary algorithm for
+% large-scale sparse multi-objective optimization problems, IEEE
+% Transactions on Evolutionary Computation, 2019.
 %------------------------------- Copyright --------------------------------
 % Copyright (c) 2018-2019 BIMK Group. You are free to use the PlatEMO for
 % research purposes. All publications which use this platform or any code
@@ -17,7 +21,7 @@ classdef SMOP6 < PROBLEM
     end
     methods
         %% Initialization
-        function obj = SMOP6()
+        function obj = SMOP8()
             obj.theta = obj.Global.ParameterSet(0.1);
             if isempty(obj.Global.M)
                 obj.Global.M = 2;
@@ -34,34 +38,17 @@ classdef SMOP6 < PROBLEM
             [N,D] = size(X);
             M = obj.Global.M;
             K = ceil(obj.theta*(D-M+1));
-            g = g4(X(:,M:end),repmat(linspace(0,1,D-M+1),N,1));
-            [g,rank] = sort(g,2);
-            temp = false(size(rank));
-            for i = 1 : size(rank,1)
-                temp(i,X(i,M-1+rank(i,:))==0) = true;
-            end
-            temp(:,1:K) = false;
-            g(temp) = 0;
-            g = sum(g,2);
-            PopObj = repmat(1+g/(D-M+1),1,M).*fliplr(cumprod([ones(N,1),1-cos(X(:,1:M-1)*pi/2)],2)).*[ones(N,1),1-sin(X(:,M-1:-1:1)*pi/2)];
+            g = sum(g3(X(:,M:M+K-1),mod(X(:,M+1:M+K)+pi,2)),2) + sum(g3(X(:,M+K:end-1),X(:,M+K+1:end)*0.9),2);
+            PopObj = repmat(1+g/(D-M+1),1,M).*fliplr(cumprod([ones(N,1),cos(X(:,1:M-1)*pi/2)],2)).*[ones(N,1),sin(X(:,M-1:-1:1)*pi/2)];
         end
         %% Sample reference points on Pareto front
         function P = PF(obj,N)
-            M = obj.Global.M;
-            P = UniformPoint(N,M);
-            c = ones(size(P,1),M);
-            for i = 1 : size(P,1) 
-                for j = 2 : M
-                    temp = P(i,j)/P(i,1)*prod(1-c(i,M-j+2:M-1));
-                    c(i,M-j+1) = (temp^2-temp+sqrt(2*temp))/(temp^2+1);
-                end
-            end
-            x = acos(c)*2/pi;
-            P = fliplr(cumprod([ones(size(x,1),1),1-cos(x(:,1:end-1)*pi/2)],2)).*[ones(size(x,1),1),1-sin(x(:,end-1:-1:1)*pi/2)];
+            P = UniformPoint(N,obj.Global.M);
+            P = P./repmat(sqrt(sum(P.^2,2)),1,obj.Global.M);
         end
     end
 end
 
-function g = g4(x,t)
-    g = (x-pi/3).^2 + t.*sin(6*pi*(x-pi/3)).^2;
+function g = g3(x,t)
+    g = 4-(x-t)-4./exp(100*(x-t).^2);
 end

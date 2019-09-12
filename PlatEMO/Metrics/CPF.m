@@ -1,7 +1,11 @@
 function Score = CPF(PopObj,PF)
 % <metric> <max>
-% Coverage of Pareto front
+% Coverage over Pareto front
 
+%------------------------------- Reference --------------------------------
+% Y. Tian, R. Cheng, X. Zhang, M. Li, and Y. Jin, Diversity assessment of
+% multi-objective evolutionary algorithms: Performance metric and benchmark
+% problems, IEEE Computational Intelligence Magazine, 2019.
 %------------------------------- Copyright --------------------------------
 % Copyright (c) 2018-2019 BIMK Group. You are free to use the PlatEMO for
 % research purposes. All publications which use this platform or any code
@@ -40,7 +44,7 @@ function y = map(x,PF)
     [N,M] = size(x);
     x  = x - repmat((sum(x,2)-1)/M,1,M);
     PF = PF - repmat((sum(PF,2)-1)/M,1,M);
-    x  = x - min(PF);
+    x  = x - repmat(min(PF,[],1),size(x,1),1);
     x  = x./repmat(sum(x,2),1,M);
     x  = max(1e-6,x);
     y  = zeros(N,M-1);
